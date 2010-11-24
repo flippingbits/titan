@@ -8,9 +8,8 @@ describe Titan::Manager do
   end
 
   def setup_manager
-    @manager = Titan::Manager.new
     @thread = new_thread
-    @manager.attach(@thread)
+    Titan::Manager.add(@thread)
   end
 
   describe "TITAN_FILE" do
@@ -19,41 +18,40 @@ describe Titan::Manager do
     end
   end
 
-  describe "#attach" do
+  describe ".add" do
     before(:each) do
-      @manager = Titan::Manager.new
       @thread = new_thread
     end
 
     it "should save the thread with its id" do
-      @manager.attach(@thread)
-      @manager.instance_variable_get("@threads")[@thread.id].should_not be_nil
+      Titan::Manager.add(@thread)
+      Titan::Manager.all_threads[@thread.id].should_not be_nil
     end
 
     it "should save the threads" do
-      @manager.should_receive(:save_threads)
-      @manager.attach(@thread)
+      Titan::Manager.should_receive(:save_threads)
+      Titan::Manager.add(@thread)
     end
   end
 
-  describe "#find" do
+  describe ".find" do
     before(:each) do
       setup_manager
     end
 
     it "should return the thread having the given id" do
-      @manager.find(@thread.id).should eql(@thread)
+      Titan::Manager.find(@thread.id).pid.should eql(@thread.pid)
     end
   end
 
-  describe "#kill" do
+  describe ".kill" do
     before(:each) do
       setup_manager
     end
 
     it "should send a KILL signal in order to kill the daemond" do
-      Process.should_receive(:kill).with('KILL', @thread)
-      @manager.kill(@thread.id)
+      Process.should_receive(:kill).with('KILL', @thread.pid)
+      Titan::Manager.kill(@thread.id)
     end
   end
 
@@ -63,11 +61,11 @@ describe Titan::Manager do
     end
 
     it "should return an Hash" do
-      @manager.all_threads
+      Titan::Manager.all_threads.should be_an(Hash)
     end
   end
 
-  describe "#load_threads" do
+  describe ".load_threads" do
     before(:each) do
       setup_manager
     end
@@ -79,7 +77,7 @@ describe Titan::Manager do
 
       it "should not open any file" do
         File.should_not_receive(:open)
-        @manager.load_threads
+        Titan::Manager.load_threads
       end
     end
 
@@ -90,29 +88,29 @@ describe Titan::Manager do
 
       it "should open the titan file" do
         File.should_receive(:open).with(Titan::Manager::TITAN_FILE).and_return("")
-        @manager.load_threads
+        Titan::Manager.load_threads
       end
 
       it "should load threads from the YAML format" do
         YAML.should_receive(:load)
-        @manager.load_threads
+        Titan::Manager.load_threads
       end
     end
   end
 
-  describe "#save_threads" do
+  describe ".save_threads" do
     before(:each) do
       setup_manager
     end
 
     it "should write all threads into the titan file" do
       File.should_receive(:open).with(Titan::Manager::TITAN_FILE, 'w')
-      @manager.save_threads
+      Titan::Manager.save_threads
     end
 
     it "should dump the threads into YAML format" do
       YAML.should_receive(:dump)
-      @manager.save_threads
+      Titan::Manager.save_threads
     end
   end
 end
