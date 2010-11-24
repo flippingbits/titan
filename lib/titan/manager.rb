@@ -1,3 +1,5 @@
+require "yaml" if RUBY_VERSION >= '1.9'
+
 module Titan
   #
   # Titan::Manager provides access to created threads.
