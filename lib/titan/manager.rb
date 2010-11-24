@@ -1,6 +1,6 @@
 module Titan
   #
-  # Titan::Manager handles created threads.
+  # Titan::Manager provides access to created threads.
   # It serializes and deserializes them using YAML.
   #
   class Manager
@@ -16,7 +16,7 @@ module Titan
       end
 
       #
-      # Returns a thread that has the given
+      # Returns a thread that has the given id
       #
       def find(id)
         load_threads
