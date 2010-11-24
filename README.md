@@ -43,7 +43,8 @@ You can easily list all available threads:
 By using the manager you can kill currently running threads:
 
   manager = Titan::Manager.new
-  manager.kill(manager.find("my_new_thread"))
+  thread  = manager.find("my_new_thread")
+  thread.kill if thread.alive?
 
 Note on Patches/Pull Requests
 ======
