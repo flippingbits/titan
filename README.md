@@ -2,7 +2,7 @@ Titan
 ======
 
 Titan helps you creating daemon threads, that can be accessed later on. On the one side it creates daemons that run in the background and don't stop if the current process exits. On the other
-side it manages created daemon threads and provides a possibility to access them later on by a custom id.
+side it manages created daemon threads and provides functionality for accessing them later on by a custom id.
 
 Usage
 ======
@@ -15,16 +15,23 @@ Creating a new daemon thread using Titan is pretty easy:
     puts "I'm awake!"
   end
 
-Furthermore you can pass an id to each created thread that can be used for identification later on:
+Furthermore you can pass an id to each created thread that can be used for identification in the future:
 
   Titan::Thread.new(:id => "my_new_thread") do
     sleep(15)
     puts "I'm awake!"
   end
 
+It's also possible to change the identifier after creation:
+
+  thread = Titan::Thread.new do
+    1+1
+  end
+  thread.id = "my_new_thread"
+
 The identifier must be unique.
 
-If you want to access the thread in the future Titan::Manager is the tool of your choice:
+If you want to access the thread in the future, Titan::Manager is the tool of your choice:
 
   thread = Titan::Thread.new(:id => "my_new_thread") do
     sleep(15)
@@ -38,15 +45,34 @@ You can easily list all available threads:
 
   Titan::Manager.all
 
-By using the manager you can kill currently running threads:
+By using the manager you can kill currently running threads using their identifier:
 
   thread  = Titan::Manager.find("my_new_thread")
   thread.kill if thread.alive?
 
+If you want to remove threads from the manager, that aren't running any longer, you can do this by:
+
+  Titan::Manager.remove_dead_threads
+
+Furthermore, you can check if a single thread is alive:
+
+  thread = Titan::Manager.find("my_new_thread")
+  thread.alive? # returns true or false
+
+Requirements
+======
+
+* Linux or Mac OS X
+
+Bugs
+======
+
+Please report bugs at http://github.com/flippingbits/titan.
+
 Note on Patches/Pull Requests
 ======
 
-* Fork the project.
+* Fork the project from http://github.com/flippingbits/titan.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
