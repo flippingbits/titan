@@ -7,6 +7,10 @@ side it manages created daemon threads and provides functionality for accessing 
 Usage
 ======
 
+First, you've to install the gem:
+
+    gem install titan
+
 Creating a new daemon thread using Titan is pretty easy:
 
     Titan::Thread.new do
