@@ -47,7 +47,7 @@ It manages threads and saves them in a special .titan file that can be found in 
 
 You can easily list all available threads:
 
-    Titan::Manager.all
+    Titan::Manager.all_threads
 
 By using the manager you can find currently running threads using their identifier:
 
