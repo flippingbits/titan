@@ -49,7 +49,7 @@ You can easily list all available threads:
 
     Titan::Manager.all_threads
 
-By using the manager you can find currently running threads using their identifier:
+By using the manager you can find currently managed threads by using their identifier:
 
     thread  = Titan::Manager.find("my_new_thread")
 
