@@ -30,17 +30,12 @@ describe Titan::Thread do
     end
 
     it "should fork the current Process" do
-      Process.should_receive(:fork)
+      Process.should_receive(:fork).and_return(1)
       @thread = new_thread
     end
 
     it "should detach the forked process" do
       Process.should_receive(:detach)
-      @thread = new_thread
-    end
-
-    it "should trap the HUP and IGNORE signals" do
-      Signal.should_receive(:trap).with('HUP', 'IGNORE')
       @thread = new_thread
     end
   end

@@ -11,9 +11,8 @@ module Titan
     # Creates a new daemonized thread
     #
     def initialize(options = {}, &block)
-      @id = options[:id] || __id__
-
-      @pid = Process.fork do
+      @id   = options[:id] || __id__
+      @pid  = Process.fork do
         # ignore interrupts
         Signal.trap('HUP', 'IGNORE')
         # execute the actual programm
@@ -37,13 +36,12 @@ module Titan
     # Returns whether the thread is alive or not
     #
     def alive?
-      alive = true
       begin
-        Process.kill(0, @pid)
+        Process.getpgid(@pid)
+        true
       rescue Errno::ESRCH
-        alive = false
+        false
       end
-      alive
     end
   end
 end
