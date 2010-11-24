@@ -26,24 +26,21 @@ The identifier must be unique.
 
 If you want to access the thread in the future Titan::Manager is the tool of your choice:
 
-  Titan::Thread.new(:id => "my_new_thread") do
+  thread = Titan::Thread.new(:id => "my_new_thread") do
     sleep(15)
     puts "I'm awake!"
   end
-  manager = Titan::Manager.new
-  manager.attach(thread)
+  Titan::Manager.add(thread)
 
 It manages threads and saves them in a special .titan file that can be found in your home folder.
 
 You can easily list all available threads:
 
-  manager = Titan::Manager.new
-  manager.all
+  Titan::Manager.all
 
 By using the manager you can kill currently running threads:
 
-  manager = Titan::Manager.new
-  thread  = manager.find("my_new_thread")
+  thread  = Titan::Manager.find("my_new_thread")
   thread.kill if thread.alive?
 
 Note on Patches/Pull Requests
