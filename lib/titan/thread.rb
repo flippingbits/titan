@@ -36,12 +36,10 @@ module Titan
     # Returns whether the thread is alive or not
     #
     def alive?
-      begin
-        Process.getpgid(@pid)
-        true
-      rescue Errno::ESRCH
-        false
-      end
+      Process.getpgid(@pid)
+      true
+    rescue Errno::ESRCH
+      false
     end
   end
 end
