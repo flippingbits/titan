@@ -1,3 +1,9 @@
+## 0.0.3 (November 25, 2010)
+
+- Bug fixes
+
+  * Fixed problems with Ruby 1.8.7
+
 ## 0.0.2 (November 24, 2010)
 
 - Bug fixes
