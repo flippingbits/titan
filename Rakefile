@@ -16,7 +16,7 @@ task :build do
 end
 
 task :install => :build do
-  system "sudo gem install titan-#{Titan::VERSION}"
+  system "gem install titan-#{Titan::VERSION}"
 end
 
 require 'rake/rdoctask'
