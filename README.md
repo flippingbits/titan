@@ -39,35 +39,27 @@ It's also possible to change the identifier after creation:
 
 The identifier must be unique.
 
-If you want to access the thread in the future, Titan::Manager is the tool of your choice:
-
-    thread = Titan::Thread.new(:id => "my_new_thread") do
-      sleep(15)
-      puts "I'm awake!"
-    end
-    Titan::Manager.add(thread)
-
-It manages threads and saves them in a special .titan file that can be found in your home folder.
+Titan manages created threads and saves them in a special .titan file that can be found in your home folder.
 
 You can easily list all available threads:
 
-    Titan::Manager.all_threads
+    Titan::Thread.all
 
-By using the manager you can find currently managed threads by using their identifier:
+By using the Thread class you can find currently managed threads by using their identifier:
 
-    thread  = Titan::Manager.find("my_new_thread")
+    thread  = Titan::Thread.find("my_new_thread")
 
 A thread can be forced to exit:
 
     thread.kill if thread.alive?
 
-If you want to remove threads from the manager, that aren't running any longer, you can do this by:
+If you want to remove threads from Titan, that aren't running any longer, you can do this by:
 
-    Titan::Manager.remove_dead_threads
+    Titan::Thread.remove_dead_threads
 
 Furthermore, you can check if a single thread is alive:
 
-    thread = Titan::Manager.find("my_new_thread")
+    thread = Titan::Thread.find("my_new_thread")
     thread.alive? # returns true or false
 
 Requirements

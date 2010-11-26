@@ -1,3 +1,7 @@
+## 0.1.0 (November 26, 2010)
+
+!!! Cleaned up the API. Now, everything is available through Titan::Thread.
+
 ## 0.0.3 (November 25, 2010)
 
 - Bug fixes
