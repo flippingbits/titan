@@ -1,3 +1,5 @@
+require "yaml"
+
 module Titan
   #
   # Titan::Thread helps you creating daemon threads that are independent from your application.
