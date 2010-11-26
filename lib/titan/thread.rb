@@ -28,7 +28,7 @@ module Titan
       end
 
       Process.detach(@pid)
-      Thread.add(self)
+      Titan::Thread.add(self)
     end
 
     #
@@ -46,6 +46,13 @@ module Titan
       true
     rescue Errno::ESRCH
       false
+    end
+
+    def id=(id)
+      @@threads.delete(@id)
+      @id = id
+      @@threads[id] = self
+      Titan::Thread.save_threads
     end
 
     class << self

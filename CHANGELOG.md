@@ -1,3 +1,9 @@
+## 0.1.1 (November 26, 2010)
+
+- Features
+
+  * Synchronize a thread after changing its id by default
+
 ## 0.1.0 (November 26, 2010)
 
 !!! Cleaned up the API. Now, everything is available through Titan::Thread.

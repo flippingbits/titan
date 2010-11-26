@@ -7,6 +7,11 @@ describe Titan::Thread do
     end
   end
 
+  before(:each) do
+    # reset the managed threads
+    Titan::Thread.__send__("class_variable_set", "@@threads", {})
+  end
+
   describe "TITAN_FILE" do
     it "should get stored in the home directory" do
       File.dirname(Titan::Thread::TITAN_FILE).should eql(File.expand_path('~'))
@@ -82,6 +87,28 @@ describe Titan::Thread do
         sleep(1)
         thread.should_not be_alive
       end
+    end
+  end
+
+  describe "#id=" do
+    before(:each) do
+      @thread = new_thread
+    end
+
+    it "should delete the old thread id from management" do
+      id = @thread.id
+      @thread.id = "test_id"
+      Titan::Thread.all[id].should be_nil
+    end
+
+    it "should add the new thread to management" do
+      @thread.id = "test_id"
+      Titan::Thread.all["test_id"].should_not be_nil
+    end
+
+    it "should start the synchronization" do
+      Titan::Thread.should_receive(:save_threads)
+      @thread.id = "test_id"
     end
   end
 
