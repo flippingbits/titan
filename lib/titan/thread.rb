@@ -7,7 +7,7 @@ module Titan
   # that gets created automatically.
   #
   class Thread
-    TITAN_FILE = "#{File.expand_path('~')}/.titan"
+    TITAN_FILE = File.expand_path('.titan', '~')
 
     attr_accessor :id, :pid
 
