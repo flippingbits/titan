@@ -102,7 +102,7 @@ module Titan
       # Removes threads that are not living anymore
       #
       def remove_dead_threads
-        @@threads.each_value { |thread| @@threads.delete(thread.id) unless thread.alive? }
+        @@threads.delete_if { |thread_id,thread| !thread.alive? }
       end
     end
   end
