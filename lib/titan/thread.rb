@@ -33,9 +33,10 @@ module Titan
 
     #
     # Kills the daemonized thread
+    # @param [String] Signal to send to the process. Eg: 'KILL','QUIT','TERM','INT'
     #
-    def kill
-      Process.kill('KILL', @pid)
+    def kill(sig='KILL')
+      Process.kill(sig, @pid)
     end
 
     #
