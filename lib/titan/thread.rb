@@ -103,6 +103,8 @@ module Titan
       #
       def remove_dead_threads
         @@threads.delete_if { |thread_id,thread| !thread.alive? }
+        save_threads
+        @@threads
       end
     end
   end
