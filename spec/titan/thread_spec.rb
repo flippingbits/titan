@@ -207,4 +207,18 @@ describe Titan::Thread do
       Titan::Thread.save_threads
     end
   end
+
+  describe ".remove_dead_threads" do
+    it "should synchronize the threads" do
+      Titan::Thread.should_receive(:save_threads)
+      Titan::Thread.remove_dead_threads
+    end
+
+    it "should return all threads" do
+      # avoid initializing a new Hash object
+      Titan::Thread.stub!(:load_threads)
+      new_thread
+      Titan::Thread.remove_dead_threads.should equal(Titan::Thread.all)
+    end
+  end
 end
