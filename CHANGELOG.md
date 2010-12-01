@@ -1,3 +1,9 @@
+## dev
+
+- Bug fixes
+
+  * Synchronize threads when removing dead ones (Thanks to Tal Atlas)
+
 ## 0.1.1 (November 26, 2010)
 
 - Features
