@@ -1,8 +1,8 @@
-## dev
+## 0.2.0 (December 4, 2010)
 
 - Features
 
-  * Use pid files for each thread instead of one global .titan file
+  * Use pid files for each thread instead of one global .titan file [Issue #5]
   * !!! You've to call Titan::Thread#run in order to start the created thread
 
 - Bug fixes
