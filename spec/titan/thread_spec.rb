@@ -12,9 +12,9 @@ describe Titan::Thread do
     Titan::Thread.__send__("class_variable_set", "@@threads", {})
   end
 
-  describe "TITAN_FILE" do
+  describe "TITAN_DIRECTORY" do
     it "should get stored in the home directory" do
-      File.dirname(Titan::Thread::TITAN_FILE).should eql(File.expand_path('~'))
+      File.dirname(Titan::Thread::TITAN_DIRECTORY).should eql(File.expand_path('~'))
     end
   end
 
@@ -39,25 +39,6 @@ describe Titan::Thread do
         @thread.id.should eql(@thread.object_id)
       end
     end
-
-    it "should fork the current Process" do
-      Process.should_receive(:fork).and_return(1)
-      new_thread
-    end
-
-    it "should detach the forked process" do
-      Process.should_receive(:detach)
-      new_thread
-    end
-
-    it "should add the thread to thread management" do
-      Titan::Thread.should_receive(:add)
-      new_thread
-    end
-
-    it "should return a thread" do
-      new_thread.should be_a(Titan::Thread)
-    end
   end
 
   describe "#kill" do
@@ -76,7 +57,7 @@ describe Titan::Thread do
       it "should return true" do
         thread = Titan::Thread.new do
           sleep(1)
-        end
+        end.run
         thread.should be_alive
       end
     end
@@ -84,7 +65,6 @@ describe Titan::Thread do
     context "given the thread is not alive" do
       it "should return false" do
         thread = new_thread
-        sleep(1)
         thread.should_not be_alive
       end
     end
@@ -112,19 +92,40 @@ describe Titan::Thread do
     end
   end
 
-  describe ".add" do
+  describe "#pid_file" do
     before(:each) do
       @thread = new_thread
     end
 
-    it "should save the thread with its id" do
-      Titan::Thread.add(@thread)
-      Titan::Thread.all[@thread.id].should_not be_nil
+    it "should return a file named like its ids" do
+      @thread.pid_file.should eql(File.expand_path(@thread.id.to_s + ".pid", Titan::Thread::TITAN_DIRECTORY))
+    end
+  end
+
+  describe "#save" do
+    before(:each) do
+      @thread = new_thread
     end
 
-    it "should save the threads" do
-      Titan::Thread.should_receive(:save_threads)
-      Titan::Thread.add(@thread)
+    it "should open its pid file" do
+      File.should_receive(:open).with(@thread.pid_file, 'w')
+      @thread.save
+    end
+  end
+
+  describe "#run" do
+    it "should fork the current Process" do
+      Process.should_receive(:fork).and_return(1)
+      new_thread.run
+    end
+
+    it "should detach the forked process" do
+      Process.should_receive(:detach)
+      new_thread.run
+    end
+
+    it "should return a thread" do
+      new_thread.run.should be_a(Titan::Thread)
     end
   end
 
@@ -162,48 +163,35 @@ describe Titan::Thread do
   describe ".load_threads" do
     before(:each) do
       new_thread
+      File.stub!(:directory?).and_return(true)
+      Dir.stub!(:entries).and_return(["test.pid"])
+      File.stub!(:read).and_return("12345")
     end
 
-    context "TITAN_FILE does not exist" do
-      before(:each) do
-        File.stub!(:exists?).and_return(false)
-      end
-
-      it "should not open any file" do
-        File.should_not_receive(:open)
-        Titan::Thread.load_threads
-      end
+    it "should check the file system" do
+      Titan::Thread.should_receive(:check_filesystem)
+      Titan::Thread.load_threads
     end
 
-    context "TITAN_FILE does exist" do
-      before(:each) do
-        File.stub!(:exists?).and_return(true)
-      end
+    it "should read the pid files" do
+      File.should_receive(:read)
+      Titan::Thread.load_threads
+    end
 
-      it "should open the titan file" do
-        File.should_receive(:open).with(Titan::Thread::TITAN_FILE).and_return("")
-        Titan::Thread.load_threads
-      end
-
-      it "should load threads from the YAML format" do
-        YAML.should_receive(:load)
-        Titan::Thread.load_threads
-      end
+    it "should load the threads" do
+      Titan::Thread.load_threads
+      Titan::Thread.all.should_not be_nil
     end
   end
 
   describe ".save_threads" do
     before(:each) do
-      new_thread
+      @first_thread   = new_thread
+      @second_thread  = new_thread
     end
 
-    it "should write all threads into the titan file" do
-      File.should_receive(:open).with(Titan::Thread::TITAN_FILE, 'w')
-      Titan::Thread.save_threads
-    end
-
-    it "should dump the threads into YAML format" do
-      YAML.should_receive(:dump)
+    it "should save all threads" do
+      [@first_thread, @second_thread].each { |t| t.should_receive(:save) }
       Titan::Thread.save_threads
     end
   end
@@ -219,6 +207,31 @@ describe Titan::Thread do
       Titan::Thread.stub!(:load_threads)
       new_thread
       Titan::Thread.remove_dead_threads.should equal(Titan::Thread.all)
+    end
+  end
+
+  describe ".check_file_system" do
+    before(:each) do
+      File.stub!(:directory?).and_return(false)
+    end
+
+    it "should create the directory" do
+      Dir.should_receive(:mkdir).with(Titan::Thread::TITAN_DIRECTORY)
+      Titan::Thread.check_filesystem
+    end
+  end
+
+  describe ".pid_files" do
+    it "should return an Array" do
+      Titan::Thread.pid_files.should be_an(Array)
+    end
+
+    it "should not include ." do
+      Titan::Thread.pid_files.should_not include(".")
+    end
+
+    it "should not include .." do
+      Titan::Thread.pid_files.should_not include("..")
     end
   end
 end

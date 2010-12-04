@@ -7,7 +7,7 @@ module Titan
   # that gets created automatically.
   #
   class Thread
-    TITAN_FILE = File.expand_path('.titan', '~')
+    TITAN_DIRECTORY = File.expand_path('.titan_threads', '~')
 
     attr_accessor :id, :pid
 
@@ -17,18 +17,12 @@ module Titan
     # Creates a new daemonized thread
     #
     def initialize(options = {}, &block)
-      @id   = options[:id] || __id__
-      @pid  = Process.fork do
-        # ignore interrupts
-        Signal.trap('HUP', 'IGNORE')
-        # execute the actual programm
-        block.call
-        # exit the forked process cleanly
-        Kernel.exit!
-      end
+      @id       = options[:id] || __id__
+      @pid      = -1
+      @programm = block
+      save
 
-      Process.detach(@pid)
-      Titan::Thread.add(self)
+      self
     end
 
     #
@@ -55,14 +49,40 @@ module Titan
       Titan::Thread.save_threads
     end
 
-    class << self
-      def add(thread)
-        load_threads
-        @@threads[thread.id] = thread
-        save_threads
-        thread
+    #
+    # Returns the file where its pid gets saved
+    #
+    def pid_file
+      File.expand_path(@id.to_s + ".pid", Titan::Thread::TITAN_DIRECTORY)
+    end
+
+    #
+    # Opens the pid file and save its pid in it
+    #
+    def save
+      Titan::Thread.check_filesystem
+      File.open(pid_file, 'w') { |file| file.write(@pid) }
+      @@threads[@id] = self
+    end
+
+    #
+    # Executes the given programm
+    #
+    def run
+      @pid  = Process.fork do
+        # ignore interrupts
+        Signal.trap('HUP', 'IGNORE')
+        # execute the actual programm
+        @programm.call
+        # exit the forked process cleanly
+        Kernel.exit!
       end
 
+      Process.detach(@pid)
+      self
+    end
+
+    class << self
       #
       # Returns a thread that has the given id
       #
@@ -84,18 +104,24 @@ module Titan
       end
 
       #
-      # Loads threads from the TITAN_FILE
+      # Loads threads from pid files inside the TITAN_DIRECTORY
       #
       def load_threads
-        return unless File.exists?(TITAN_FILE)
-        @@threads = YAML::load(File.open(TITAN_FILE)) || {}
+        check_filesystem
+        pid_files.each{ |pid_file|
+          thread     = Titan::Thread.new
+          thread.pid = File.read(File.expand_path(pid_file, TITAN_DIRECTORY))
+          thread.id  = pid_file.delete(".pid")
+          @@threads[thread.id] = thread
+        }
       end
 
       #
-      # Saves threads to the TITAN_FILE
+      # Saves threads to pid files inside the TITAN_DIRECTORY
       #
       def save_threads
-        File.open(TITAN_FILE, 'w') { |file| file.write(YAML::dump(@@threads)) }
+        pid_files.each { |pid_file| File.delete (File.expand_path(pid_file, TITAN_DIRECTORY)) }
+        @@threads.each_value{ |thread| thread.save }
       end
 
       #
@@ -105,6 +131,20 @@ module Titan
         @@threads.delete_if { |thread_id,thread| !thread.alive? }
         save_threads
         @@threads
+      end
+
+      #
+      # Checks the file system for neccessary directories and permissions
+      #
+      def check_filesystem
+        Dir.mkdir(TITAN_DIRECTORY) unless File.directory?(TITAN_DIRECTORY)
+      end
+
+      #
+      # Returns a list of all pid files available in the TITAN_DIRECTORY
+      #
+      def pid_files
+        Dir.entries(TITAN_DIRECTORY) - [".", ".."]
       end
     end
   end

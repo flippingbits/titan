@@ -1,5 +1,9 @@
 ## dev
 
+- Features
+
+  * Use pid files for each thread instead of one global .titan file
+
 - Bug fixes
 
   * Synchronize threads when removing dead ones (Thanks to Tal Atlas)
