@@ -20,8 +20,7 @@ module Titan
       @id       = options[:id] || __id__
       @pid      = -1
       @programm = block
-      save
-
+      @@threads[@id] = self
       self
     end
 
@@ -77,8 +76,8 @@ module Titan
         # exit the forked process cleanly
         Kernel.exit!
       end
-
       Process.detach(@pid)
+      save
       self
     end
 
@@ -109,9 +108,8 @@ module Titan
       def load_threads
         check_filesystem
         pid_files.each{ |pid_file|
-          thread     = Titan::Thread.new
+          thread     = Titan::Thread.new(:id => File.basename(pid_file, ".pid"))
           thread.pid = File.read(File.expand_path(pid_file, TITAN_DIRECTORY))
-          thread.id  = pid_file.delete(".pid")
           @@threads[thread.id] = thread
         }
       end
