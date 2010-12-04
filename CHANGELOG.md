@@ -3,6 +3,7 @@
 - Features
 
   * Use pid files for each thread instead of one global .titan file
+  * !!! You've to call Titan::Thread#run in order to start the created thread
 
 - Bug fixes
 
