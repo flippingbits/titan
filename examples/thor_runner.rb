@@ -25,7 +25,7 @@ class Runner < Thor
           sleep(10)
           puts Time.now.strftime("%H:%m:%S")
         end
-      end
+      end.run
     end
 
     desc "stop", "Stops printing the time"
