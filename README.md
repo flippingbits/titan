@@ -15,31 +15,32 @@ and require it
 
     require "titan"
 
-Creating a new daemon thread using Titan is pretty easy:
+Creating a new daemon thread using Titan is pretty easy. First, you've create a new Titan::Thread object and then call its #run method:
 
-    Titan::Thread.new do
+    thread = Titan::Thread.new do
       # here comes the programm
       sleep(15)
       puts "I'm awake!"
     end
+    thread.run
 
 Furthermore you can pass an id to each created thread that can be used for identification in the future:
 
     Titan::Thread.new(:id => "my_new_thread") do
       sleep(15)
       puts "I'm awake!"
-    end
+    end.run
 
-It's also possible to change the identifier after creation:
+It's also possible to change the identifier after creation and while the thread is running:
 
     thread = Titan::Thread.new do
       1+1
-    end
+    end.run
     thread.id = "my_new_thread"
 
 The identifier must be unique.
 
-Titan manages created threads and saves them in a special .titan file that can be found in your home folder.
+Titan manages created threads and saves them in pid files inside of a .titan\_threads directory that can be found in your home folder.
 
 You can easily list all available threads:
 

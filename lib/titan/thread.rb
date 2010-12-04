@@ -41,6 +41,9 @@ module Titan
       false
     end
 
+    #
+    # Changes the id of the thread and starts synchronization
+    #
     def id=(id)
       @@threads.delete(@id)
       @id = id
