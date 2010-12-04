@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require "rubygems"
 require "titan"
 require "thor"
 
