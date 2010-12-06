@@ -112,7 +112,7 @@ module Titan
         check_filesystem
         pid_files.each{ |pid_file|
           thread     = Titan::Thread.new(:id => File.basename(pid_file, ".pid"))
-          thread.pid = File.read(File.expand_path(pid_file, TITAN_DIRECTORY))
+          thread.pid = File.read(File.expand_path(pid_file, TITAN_DIRECTORY)).to_i
           @@threads[thread.id] = thread
         }
       end

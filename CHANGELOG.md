@@ -1,3 +1,9 @@
+## 0.2.1 (December 6, 2010)
+
+- Bug fixes
+
+  * Titan::Titan#pid has to be an Integer
+
 ## 0.2.0 (December 4, 2010)
 
 - Features
