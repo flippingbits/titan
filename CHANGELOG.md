@@ -1,3 +1,9 @@
+## dev
+
+- Bug fixes
+
+  * Fixed "warning: don't put space before argument parentheses" in thread.rb at line 124
+
 ## 0.2.1 (December 6, 2010)
 
 - Bug fixes
