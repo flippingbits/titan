@@ -1,5 +1,9 @@
 ## dev
 
+- Features
+
+  * Added an executable that prints the status of all threads managed by Titan ('titan status' on the terminal)
+
 - Bug fixes
 
   * Fixed "warning: don't put space before argument parentheses" in thread.rb at line 124
