@@ -1,7 +1,7 @@
 require "thor"
 
 module Titan
-  class Cli < Thor
+  class CLI < Thor
     include Thor::Actions
 
     def initialize(*)

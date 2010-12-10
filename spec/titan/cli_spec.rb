@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Titan::Cli do
+describe Titan::CLI do
   before(:each) do
     @shell = mock(Thor::Shell::Basic, :print_table => nil, :say => nil)
     Thor::Shell::Basic.stub!(:new).and_return(@shell)
-    @cli = Titan::Cli.new
+    @cli = Titan::CLI.new
   end
 
   describe "#help" do
