@@ -63,9 +63,14 @@ Furthermore, you can check if a single thread is alive:
     thread = Titan::Thread.find("my_new_thread")
     thread.alive? # returns true or false
 
+You can print the status of all threads managed by Titan on the command line:
+
+    titan status
+
 Requirements
 ======
 
+* Ruby 1.8.7 or higher
 * Linux or Mac OS X
 
 Bugs
