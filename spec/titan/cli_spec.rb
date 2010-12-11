@@ -22,7 +22,10 @@ describe Titan::CLI do
 
     context "given there are threads available" do
       before(:each) do
-        Titan::Thread.stub!(:all).and_return({'test' => Titan::Thread.new(:id => 'test')})
+        thread = Titan::Thread.new(:id => 'test') do
+          1+1
+        end
+        Titan::Thread.stub!(:all).and_return({'test' => thread})
       end
 
       it "should print the threads as a table" do
