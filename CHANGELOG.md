@@ -1,4 +1,4 @@
-## dev
+## 0.3.0 (December 12, 2010)
 
 - Features
 
