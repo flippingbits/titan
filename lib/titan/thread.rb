@@ -120,7 +120,7 @@ module Titan
       #
       def save_threads
         pid_files.each { |pid_file| File.delete(File.expand_path(pid_file, TITAN_DIRECTORY)) }
-        @@threads.each_value{ |thread| thread.save }
+        @@threads.each_value { |thread| thread.save }
       end
 
       #
