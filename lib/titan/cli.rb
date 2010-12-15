@@ -26,9 +26,9 @@ module Titan
     desc "status", "Prints the status of all threads managed by Titan"
     def status
       table_header = ["id", "pid", "status"]
-      threads = Titan::Thread.all.each_value.collect { |thread|
+      threads = Titan::Thread.all.each_value.collect do |thread|
         [thread.id.to_s, thread.pid.to_s, thread.alive? ? "alive" : "dead"]
-      }
+      end
       @shell.print_table(threads.unshift(table_header)) unless threads.empty?
     end
 
