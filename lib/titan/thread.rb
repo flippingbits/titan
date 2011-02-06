@@ -57,6 +57,22 @@ module Titan
     end
 
     #
+    # Returns the used memory
+    #
+    def used_memory
+      used_memory = Titan::System.ps('rss', @pid)
+      used_memory ? used_memory.to_i : nil
+    end
+
+    #
+    # Returns the used CPU
+    #
+    def used_cpu
+      used_cpu = Titan::System.ps('%cpu', @pid)
+      used_cpu ? used_cpu.to_f : nil
+    end
+
+    #
     # Opens the pid file and save its pid in it
     #
     def save

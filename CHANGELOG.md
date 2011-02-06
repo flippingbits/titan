@@ -1,3 +1,10 @@
+## dev
+
+- Features
+
+  * Added Titan::System that provides common methods
+  * Added Titan::Thread#used\_cpu and Titan::Thread#used\_memory
+
 ## 0.3.0 (December 12, 2010)
 
 - Features

@@ -102,6 +102,60 @@ describe Titan::Thread do
     end
   end
 
+  describe "#used_memory" do
+    before(:each) do
+      @thread = new_thread
+    end
+
+    it "should call Titan::System.ps" do
+      Titan::System.should_receive(:ps)
+      @thread.used_memory
+    end
+
+    context "given a pid exists" do
+      before(:each) do
+        @thread.run
+      end
+
+      it "should return an Integer" do
+         @thread.used_memory.should be_an(Integer)
+      end
+    end
+
+    context "given no pid exists" do
+      it "should return nil" do
+        @thread.used_memory.should be_nil
+      end
+    end
+  end
+
+  describe "#used_cpu" do
+    before(:each) do
+      @thread = new_thread
+    end
+
+    it "should call Titan::System.ps" do
+      Titan::System.should_receive(:ps)
+      @thread.used_cpu
+    end
+
+    context "given a pid exists" do
+      before(:each) do
+        @thread.run
+      end
+
+      it "should return a Float" do
+         @thread.used_cpu.should be_an(Float)
+      end
+    end
+
+    context "given no pid exists" do
+      it "should return nil" do
+        @thread.used_cpu.should be_nil
+      end
+    end
+  end
+
   describe "#save" do
     before(:each) do
       @thread = new_thread
