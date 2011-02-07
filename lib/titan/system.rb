@@ -17,6 +17,20 @@ module Titan
           nil
         end
       end
+
+      #
+      # Checks the file system for neccessary directories and permissions
+      #
+      def check_filesystem
+        Dir.mkdir(Titan::TITAN_DIRECTORY) unless File.directory?(Titan::TITAN_DIRECTORY)
+      end
+
+      #
+      # Returns a list of all pid files available in the Titan::TITAN_DIRECTORY
+      #
+      def pid_files
+        Dir.entries(Titan::TITAN_DIRECTORY) - [".", ".."]
+      end
     end
   end
 end

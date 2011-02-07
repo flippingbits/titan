@@ -1,5 +1,8 @@
 ## 0.4.0.dev
 
+  * moved Titan::Thread.pid\_files and Titan::Thread.check\_filesystem
+    to Titan::System
+
 - Features
 
   * Added Titan::System that provides common methods

@@ -12,9 +12,9 @@ describe Titan::Thread do
     Titan::Thread.__send__("class_variable_set", "@@threads", {})
   end
 
-  describe "TITAN_DIRECTORY" do
+  describe "Titan::TITAN_DIRECTORY" do
     it "should get stored in the home directory" do
-      File.dirname(Titan::Thread::TITAN_DIRECTORY).should eql(File.expand_path('~'))
+      File.dirname(Titan::TITAN_DIRECTORY).should eql(File.expand_path('~'))
     end
   end
 
@@ -98,7 +98,7 @@ describe Titan::Thread do
     end
 
     it "should return a file named like its ids" do
-      @thread.pid_file.should eql(File.expand_path(@thread.id.to_s + ".pid", Titan::Thread::TITAN_DIRECTORY))
+      @thread.pid_file.should eql(File.expand_path(@thread.id.to_s + ".pid", Titan::TITAN_DIRECTORY))
     end
   end
 
@@ -159,6 +159,11 @@ describe Titan::Thread do
   describe "#save" do
     before(:each) do
       @thread = new_thread
+    end
+
+    it "should check the file system" do
+      Titan::System.should_receive(:check_filesystem)
+      @thread.save
     end
 
     it "should open its pid file" do
@@ -223,7 +228,7 @@ describe Titan::Thread do
     end
 
     it "should check the file system" do
-      Titan::Thread.should_receive(:check_filesystem)
+      Titan::System.should_receive(:check_filesystem)
       Titan::Thread.load_threads
     end
 
@@ -261,31 +266,6 @@ describe Titan::Thread do
       Titan::Thread.stub!(:load_threads)
       new_thread
       Titan::Thread.remove_dead_threads.should equal(Titan::Thread.all)
-    end
-  end
-
-  describe ".check_file_system" do
-    before(:each) do
-      File.stub!(:directory?).and_return(false)
-    end
-
-    it "should create the directory" do
-      Dir.should_receive(:mkdir).with(Titan::Thread::TITAN_DIRECTORY)
-      Titan::Thread.check_filesystem
-    end
-  end
-
-  describe ".pid_files" do
-    it "should return an Array" do
-      Titan::Thread.pid_files.should be_an(Array)
-    end
-
-    it "should not include ." do
-      Titan::Thread.pid_files.should_not include(".")
-    end
-
-    it "should not include .." do
-      Titan::Thread.pid_files.should_not include("..")
     end
   end
 end

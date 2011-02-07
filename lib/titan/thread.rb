@@ -5,8 +5,6 @@ module Titan
   # that gets created automatically.
   #
   class Thread
-    TITAN_DIRECTORY = File.expand_path('.titan_threads', '~')
-
     attr_accessor :id, :pid
 
     @@threads = {}
@@ -53,7 +51,7 @@ module Titan
     # Returns the file where its pid gets saved
     #
     def pid_file
-      File.expand_path(@id.to_s + ".pid", Titan::Thread::TITAN_DIRECTORY)
+      File.expand_path(@id.to_s + ".pid", TITAN_DIRECTORY)
     end
 
     #
@@ -76,7 +74,7 @@ module Titan
     # Opens the pid file and save its pid in it
     #
     def save
-      Titan::Thread.check_filesystem
+      Titan::System.check_filesystem
       File.open(pid_file, 'w') { |file| file.write(@pid) }
       @@threads[@id] = self
     end
@@ -123,8 +121,8 @@ module Titan
       # Loads threads from pid files inside the TITAN_DIRECTORY
       #
       def load_threads
-        check_filesystem
-        pid_files.each{ |pid_file|
+        Titan::System.check_filesystem
+        Titan::System.pid_files.each{ |pid_file|
           thread     = Titan::Thread.new(:id => File.basename(pid_file, ".pid"))
           thread.pid = File.read(File.expand_path(pid_file, TITAN_DIRECTORY)).to_i
           @@threads[thread.id] = thread
@@ -135,7 +133,7 @@ module Titan
       # Saves threads to pid files inside the TITAN_DIRECTORY
       #
       def save_threads
-        pid_files.each { |pid_file| File.delete(File.expand_path(pid_file, TITAN_DIRECTORY)) }
+        Titan::System.pid_files.each { |pid_file| File.delete(File.expand_path(pid_file, TITAN_DIRECTORY)) }
         @@threads.each_value { |thread| thread.save }
       end
 
@@ -146,20 +144,6 @@ module Titan
         @@threads.delete_if { |thread_id,thread| !thread.alive? }
         save_threads
         @@threads
-      end
-
-      #
-      # Checks the file system for neccessary directories and permissions
-      #
-      def check_filesystem
-        Dir.mkdir(TITAN_DIRECTORY) unless File.directory?(TITAN_DIRECTORY)
-      end
-
-      #
-      # Returns a list of all pid files available in the TITAN_DIRECTORY
-      #
-      def pid_files
-        Dir.entries(TITAN_DIRECTORY) - [".", ".."]
       end
     end
   end
