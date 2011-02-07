@@ -1,4 +1,4 @@
-## 0.4.0.dev
+## 0.4.0 (February 7, 2011)
 
   * moved Titan::Thread.pid\_files and Titan::Thread.check\_filesystem
     to Titan::System
