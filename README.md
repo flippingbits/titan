@@ -63,6 +63,14 @@ Furthermore, you can check if a single thread is alive:
     thread = Titan::Thread.find("my_new_thread")
     thread.alive? # returns true or false
 
+The thread's memory and CPU usage is available by
+
+    thread.used_memory
+
+and
+
+    thread.used_cpu
+
 You can print the status of all threads managed by Titan on the command line:
 
     titan status
