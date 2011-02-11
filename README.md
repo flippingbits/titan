@@ -100,4 +100,4 @@ Note on Patches/Pull Requests
 Copyright
 ======
 
-Copyright (c) 2010 Stefan Sprenger. See LICENSE for details.
+Copyright (c) 2010-2011 Stefan Sprenger. See LICENSE for details.
