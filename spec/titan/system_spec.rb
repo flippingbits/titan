@@ -27,6 +27,10 @@ describe Titan::System do
   end
 
   describe ".pid_files" do
+    before(:each) do
+      Dir.stub!(:entries).and_return([".", "..", "test.pid"])
+    end
+
     it "should return an Array" do
       Titan::System.pid_files.should be_an(Array)
     end
