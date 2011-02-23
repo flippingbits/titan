@@ -1,4 +1,4 @@
-Titan
+Titan ![Build status](http://travis-ci.org/flippingbits/titan.png)
 ======
 
 Titan helps you creating daemon threads, that can be accessed later on. On the one side it creates daemons that run in the background and don't stop if the current process exits. On the other
