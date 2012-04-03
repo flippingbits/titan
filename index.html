@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Titan by flippingbits</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/flippingbits/titan">Fork Me on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Titan</h1>
+            <h2>Titan helps you creating and managing daemon threads.</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/flippingbits/titan/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/flippingbits/titan/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+      <span class="banner-fix"></span>
+
+      <section id="main_content">
+        <h1>Titan <img src="http://travis-ci.org/flippingbits/titan.png" alt="Build status">
+</h1>
+
+<p>Titan helps you creating daemon threads, that can be accessed later on. On the one side it creates daemons that run in the background and don't stop if the current process exits. On the other
+side it manages created daemon threads and provides functionality for accessing them later on by a custom id.</p>
+
+<h1>Usage</h1>
+
+<p>First, you've to install the gem</p>
+
+<pre><code>gem install titan
+</code></pre>
+
+<p>and require it</p>
+
+<pre><code>require "titan"
+</code></pre>
+
+<p>Creating a new daemon thread using Titan is pretty easy. First, you've create a new Titan::Thread object and then call its #run method:</p>
+
+<pre><code>thread = Titan::Thread.new do
+  # here comes the programm
+  sleep(15)
+  puts "I'm awake!"
+end
+thread.run
+</code></pre>
+
+<p>Furthermore you can pass an id to each created thread that can be used for identification in the future:</p>
+
+<pre><code>Titan::Thread.new(:id =&gt; "my_new_thread") do
+  sleep(15)
+  puts "I'm awake!"
+end.run
+</code></pre>
+
+<p>It's also possible to change the identifier after creation and while the thread is running:</p>
+
+<pre><code>thread = Titan::Thread.new do
+  1+1
+end.run
+thread.id = "my_new_thread"
+</code></pre>
+
+<p>The identifier must be unique.</p>
+
+<p>Titan manages created threads and saves them in pid files inside of a .titan_threads directory that can be found in your home folder.</p>
+
+<p>You can easily list all available threads:</p>
+
+<pre><code>Titan::Thread.all
+</code></pre>
+
+<p>By using the Thread class you can find currently managed threads by using their identifier:</p>
+
+<pre><code>thread  = Titan::Thread.find("my_new_thread")
+</code></pre>
+
+<p>A thread can be forced to exit:</p>
+
+<pre><code>thread.kill if thread.alive?
+</code></pre>
+
+<p>If you want to remove threads from Titan, that aren't running any longer, you can do this by:</p>
+
+<pre><code>Titan::Thread.remove_dead_threads
+</code></pre>
+
+<p>Furthermore, you can check if a single thread is alive:</p>
+
+<pre><code>thread = Titan::Thread.find("my_new_thread")
+thread.alive? # returns true or false
+</code></pre>
+
+<p>The thread's memory and CPU usage is available by</p>
+
+<pre><code>thread.used_memory
+</code></pre>
+
+<p>and</p>
+
+<pre><code>thread.used_cpu
+</code></pre>
+
+<p>You can print the status of all threads managed by Titan on the command line:</p>
+
+<pre><code>titan status
+</code></pre>
+
+<h1>Requirements</h1>
+
+<ul>
+<li>Ruby 1.8.7 or higher</li>
+<li>Linux or Mac OS X</li>
+</ul><h1>Bugs</h1>
+
+<p>Please report bugs at <a href="http://github.com/flippingbits/titan/issues">http://github.com/flippingbits/titan/issues</a>.</p>
+
+<h1>Note on Patches/Pull Requests</h1>
+
+<ul>
+<li>Fork the project from <a href="http://github.com/flippingbits/titan">http://github.com/flippingbits/titan</a>.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Add tests for it. This is important so I don't break it in a
+future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history.
+(if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)</li>
+<li>Send me a pull request. Bonus points for topic branches.</li>
+</ul><h1>Copyright</h1>
+
+<p>Copyright (c) 2010-2012 Stefan Sprenger. See LICENSE for details.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/flippingbits">flippingbits</a> can be found on <a href="https://github.com/flippingbits/titan">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
